@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: C:\TFS-Cezar\Antigo\arquivos\arquivos\IntegracoesVTEX.exe-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D45B2262-9D80-4761-83EB-A0F6C72301DA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>IntegracoesVTEX</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+    <RootNamespace>IntegracoesVETX</RootNamespace>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SAPBusinessOneSDK" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.ServiceProcess" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entity\PriceTag.cs" />
+    <Compile Include="ProjectInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Scheduler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Util\ErrorResponseNF.cs" />
+    <Compile Include="Util\Error.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Util\EnumStatusIntegracao.cs" />
+    <Compile Include="Util\EnumTipoIntegracao.cs" />
+    <Compile Include="Util\JsonUtil.cs" />
+    <Compile Include="Util\Log.cs" />
+    <Compile Include="Service\Warehouses.cs" />
+    <Compile Include="Service\WarehouseService.cs" />
+    <Compile Include="Service\BaseService.cs" />
+    <Compile Include="Entity\BusinessPartner.cs" />
+    <Compile Include="Entity\Cliente.cs" />
+    <Compile Include="Entity\Endereco.cs" />
+    <Compile Include="Entity\EnderecoCliente.cs" />
+    <Compile Include="Entity\Feed.cs" />
+    <Compile Include="Entity\Handle.cs" />
+    <Compile Include="Entity\Invoice.cs" />
+    <Compile Include="Entity\ItemNF.cs" />
+    <Compile Include="Entity\Item.cs" />
+    <Compile Include="Entity\OrderFiltered.cs" />
+    <Compile Include="Entity\Paging.cs" />
+    <Compile Include="Entity\Stats.cs" />
+    <Compile Include="Entity\Stats1.cs" />
+    <Compile Include="Entity\Totalvalue.cs" />
+    <Compile Include="Entity\Facets.cs" />
+    <Compile Include="Entity\Totalitems.cs" />
+    <Compile Include="Entity\Facets1.cs" />
+    <Compile Include="Entity\List.cs" />
+    <Compile Include="Entity\OrderIntegraCommerce.cs" />
+    <Compile Include="Entity\OrderQueue.cs" />
+    <Compile Include="Entity\Orders.cs" />
+    <Compile Include="Entity\Pedido.cs" />
+    <Compile Include="Entity\Clientprofiledata.cs" />
+    <Compile Include="Entity\Ratesandbenefitsdata.cs" />
+    <Compile Include="Entity\Shippingdata.cs" />
+    <Compile Include="Entity\Address.cs" />
+    <Compile Include="Entity\Logisticsinfo.cs" />
+    <Compile Include="Entity\Pickupstoreinfo.cs" />
+    <Compile Include="Entity\Sla.cs" />
+    <Compile Include="Entity\Pickupstoreinfo1.cs" />
+    <Compile Include="Entity\Deliveryid.cs" />
+    <Compile Include="Entity\Selectedaddress.cs" />
+    <Compile Include="Entity\Paymentdata.cs" />
+    <Compile Include="Entity\Transaction.cs" />
+    <Compile Include="Entity\Payment.cs" />
+    <Compile Include="Entity\Connectorresponses.cs" />
+    <Compile Include="Entity\Packageattachment.cs" />
+    <Compile Include="Entity\Storepreferencesdata.cs" />
+    <Compile Include="Entity\Currencyformatinfo.cs" />
+    <Compile Include="Entity\Marketplace.cs" />
+    <Compile Include="Entity\Itemmetadata.cs" />
+    <Compile Include="Entity\ItemData.cs" />
+    <Compile Include="Entity\Total.cs" />
+    <Compile Include="Entity\ItemVtex.cs" />
+    <Compile Include="Entity\Itemattachment.cs" />
+    <Compile Include="Entity\Content.cs" />
+    <Compile Include="Entity\Additionalinfo.cs" />
+    <Compile Include="Entity\Dimension.cs" />
+    <Compile Include="Entity\Seller.cs" />
+    <Compile Include="Entity\UpdateInventory.cs" />
+    <Compile Include="DAL\BusinessPartnersDAL.cs" />
+    <Compile Include="DAL\CommonConn.cs" />
+    <Compile Include="DAL\CountyDAL.cs" />
+    <Compile Include="DAL\OrdersDAL.cs" />
+    <Compile Include="DAL\WarehouseDAL.cs" />
+    <Compile Include="Business\IntegracaoService.cs" />
+    <Compile Include="Business\OrderFiltered.cs" />
+    <Compile Include="Business\Paging.cs" />
+    <Compile Include="Business\Stats.cs" />
+    <Compile Include="Business\Stats1.cs" />
+    <Compile Include="Business\Totalvalue.cs" />
+    <Compile Include="Business\Facets.cs" />
+    <Compile Include="Business\Totalitems.cs" />
+    <Compile Include="Business\Facets1.cs" />
+    <Compile Include="Business\List.cs" />
+    <Compile Include="Business\Repositorio.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="IntegracoesVTEX\ProjectInstaller.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
