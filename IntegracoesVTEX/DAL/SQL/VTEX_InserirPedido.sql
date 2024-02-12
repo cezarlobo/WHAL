@@ -1,0 +1,1 @@
+﻿EXEC SP_WAHL_PedidoVTEX_Adicionar '{0}', '{1}'

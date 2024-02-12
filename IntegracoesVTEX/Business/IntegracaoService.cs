@@ -137,12 +137,12 @@ namespace IntegracoesVETX.Business
             }
         }
 
-        public void IniciarIntegracaoPedido(Company oCompany)
+        public void IniciarImportacaoPedidos(Company oCompany)
         {
             string idPedidoVtex;
             try
             {
-                log.WriteLogPedido("Inicio do Processo de Integração de Pedido.");
+                log.WriteLogPedido("Inicio do Processo de Importação de Pedido.");
                 Repositorio repositorioPedido = new Repositorio();
                 List<Feed> listaEnveto = new List<Feed>();
                 Pedido pedidoVtex = new Pedido();
@@ -153,69 +153,20 @@ namespace IntegracoesVETX.Business
                     listaEnveto = JsonConvert.DeserializeObject<List<Feed>>(responsePedido.Result.Content.ReadAsStringAsync().Result);
                     if (listaEnveto.Count > 0)
                     {
+                        SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+
                         foreach (Feed evento in listaEnveto)
                         {
                             if (!evento.state.Equals("ready-for-handling"))
                             {
                                 continue;
                             }
-                            Task<HttpResponseMessage> responseOrder = repositorioPedido.BuscarPedido(evento.orderId);
-                            if (!responseOrder.Result.IsSuccessStatusCode)
-                            {
-                                continue;
-                            }
-                            pedidoVtex = JsonConvert.DeserializeObject<Pedido>(responseOrder.Result.Content.ReadAsStringAsync().Result);
-                            if (!pedidoVtex.storePreferencesData.countryCode.Equals("BRA"))
-                            {
-                                continue;
-                            }
-                            if (pedidoVtex.origin.Equals("Fulfillment"))
-                            {
-                                Cliente clienteMkt = new Cliente();
-                                Endereco enderecoMkt = new Endereco();
-                                InserirClientes(oCompany, clienteMkt, enderecoMkt, pedidoVtex);
-                            }
-                            else
-                            {
-                                new List<Cliente>();
-                                List<Endereco> enderecols = new List<Endereco>();
-                                if (!string.IsNullOrEmpty(pedidoVtex.clientProfileData.document))
-                                {
-                                    Task<HttpResponseMessage> responseCliente = repositorioPedido.BuscarClientePorDocumento(pedidoVtex.clientProfileData.document);
-                                    if (responseCliente.Result.IsSuccessStatusCode)
-                                    {
-                                        foreach (Cliente cliente in JsonConvert.DeserializeObject<List<Cliente>>(responseCliente.Result.Content.ReadAsStringAsync().Result))
-                                        {
-                                            Task<HttpResponseMessage> responseEndereco = repositorioPedido.BuscarEnderecoPorUserId(cliente.id);
-                                            if (responseEndereco.Result.IsSuccessStatusCode)
-                                            {
-                                                enderecols = JsonConvert.DeserializeObject<List<Endereco>>(responseEndereco.Result.Content.ReadAsStringAsync().Result);
-                                            }
-                                            foreach (Endereco endereco in enderecols)
-                                            {
-                                                if (oCompany.Connected)
-                                                {
-                                                    string document = string.Empty;
-                                                    if (cliente.document != null || cliente.corporateDocument != null)
-                                                    {
-                                                        document = ((!cliente.isCorporate.Equals("true")) ? cliente.document : cliente.corporateDocument);
-                                                    }
-                                                    if (document != null)
-                                                    {
-                                                        InserirClientes(oCompany, cliente, endereco, pedidoVtex);
-                                                    }
-                                                    else
-                                                    {
-                                                        log.WriteLogTable(oCompany, EnumTipoIntegracao.Cliente, cliente.id, "", EnumStatusIntegracao.Erro, "Cliente não cadastrado pois o número do documento VTEX é inválido.");
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            InserirPedidoVenda(oCompany, pedidoVtex, evento);
+
+                            string sql = string.Format(DAL.SQL.Queries.VTEX_InserirPedido, evento.orderId, evento.handle);
+                            oRS.DoQuery(sql);
                         }
+
+                        oRS = null;
                     }
                 }
                 else
@@ -233,7 +184,104 @@ namespace IntegracoesVETX.Business
             }
         }
 
-        private int InserirPedidoVenda(Company oCompany, Pedido pedidoVtex, Feed evento)
+        public void IniciarIntegracaoPedido(Company oCompany)
+        {
+            string idPedidoVtex;
+            try
+            {
+                log.WriteLogPedido("Inicio do Processo de Integração de Pedido.");
+                Repositorio repositorioPedido = new Repositorio();
+                //List<Feed> listaEnveto = new List<Feed>();
+                Pedido pedidoVtex = new Pedido();
+
+                SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                oRS.DoQuery(DAL.SQL.Queries.VTEX_PedidosIntegrar);
+
+                if (oRS.RecordCount > 0)
+                {
+
+                    for (int i = 0; i < oRS.RecordCount; i++)
+                    {
+                        string numeroPedido = oRS.Fields.Item("U_NUM_VTEX").Value.ToString();
+                        string evento = oRS.Fields.Item("U_EVENTO").Value.ToString();
+
+                        Task<HttpResponseMessage> responseOrder = repositorioPedido.BuscarPedido(numeroPedido);
+                        if (!responseOrder.Result.IsSuccessStatusCode)
+                        {
+                            continue;
+                        }
+                        pedidoVtex = JsonConvert.DeserializeObject<Pedido>(responseOrder.Result.Content.ReadAsStringAsync().Result);
+                        if (!pedidoVtex.storePreferencesData.countryCode.Equals("BRA"))
+                        {
+                            continue;
+                        }
+                        if (pedidoVtex.origin.Equals("Fulfillment"))
+                        {
+                            Cliente clienteMkt = new Cliente();
+                            Endereco enderecoMkt = new Endereco();
+                            InserirClientes(oCompany, clienteMkt, enderecoMkt, pedidoVtex);
+                        }
+                        else
+                        {
+                            new List<Cliente>();
+                            List<Endereco> enderecols = new List<Endereco>();
+                            if (!string.IsNullOrEmpty(pedidoVtex.clientProfileData.document))
+                            {
+                                Task<HttpResponseMessage> responseCliente = repositorioPedido.BuscarClientePorDocumento(pedidoVtex.clientProfileData.document);
+                                if (responseCliente.Result.IsSuccessStatusCode)
+                                {
+                                    foreach (Cliente cliente in JsonConvert.DeserializeObject<List<Cliente>>(responseCliente.Result.Content.ReadAsStringAsync().Result))
+                                    {
+                                        Task<HttpResponseMessage> responseEndereco = repositorioPedido.BuscarEnderecoPorUserId(cliente.id);
+                                        if (responseEndereco.Result.IsSuccessStatusCode)
+                                        {
+                                            enderecols = JsonConvert.DeserializeObject<List<Endereco>>(responseEndereco.Result.Content.ReadAsStringAsync().Result);
+                                        }
+                                        foreach (Endereco endereco in enderecols)
+                                        {
+                                            if (oCompany.Connected)
+                                            {
+                                                string document = string.Empty;
+                                                if (cliente.document != null || cliente.corporateDocument != null)
+                                                {
+                                                    document = ((!cliente.isCorporate.Equals("true")) ? cliente.document : cliente.corporateDocument);
+                                                }
+                                                if (document != null)
+                                                {
+                                                    InserirClientes(oCompany, cliente, endereco, pedidoVtex);
+                                                }
+                                                else
+                                                {
+                                                    log.WriteLogTable(oCompany, EnumTipoIntegracao.Cliente, cliente.id, "", EnumStatusIntegracao.Erro, "Cliente não cadastrado pois o número do documento VTEX é inválido.");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        InserirPedidoVenda(oCompany, pedidoVtex, evento);
+                    }
+
+                }
+                else
+                {
+                    log.WriteLogPedido("Nenhum pedido importado para integrar ");
+                }
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
+            catch (Exception e)
+            {
+                log.WriteLogPedido("Exception método IniciarIntegracaoPedido - " + e.Message);
+                throw;
+            }
+        }
+
+
+
+        private int InserirPedidoVenda(Company oCompany, Pedido pedidoVtex, string handle)
         {
             try
             {
@@ -254,7 +302,7 @@ namespace IntegracoesVETX.Business
                     if (inserir && order.InsertOrder(pedidoVtex, out messageError) == 0)
                     {
                         Repositorio repositorio = new Repositorio();
-                        Task<HttpResponseMessage> response = repositorio.AtualizaFilaEnvetoPedido(evento.handle);
+                        Task<HttpResponseMessage> response = repositorio.AtualizaFilaEnvetoPedido(handle);
                         if (response.Result.IsSuccessStatusCode)
                         {
                             log.WriteLogPedido("Pedido " + pedidoVtex.orderId + " removido da fila de eventos (Feed).");
