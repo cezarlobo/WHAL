@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ConsultaOPItensFechada" xml:space="preserve">
+    <value>SELECT 
+	T0."ItemCode"		AS "pn"
+	, T0."PlannedQty"	AS "qtde"
+	, '0'				AS "valor_unitario"
+	, '0'				AS "peso"
+FROM 
+	"{0}"."dbo"."OWOR" T0 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaNotaDevolucao" xml:space="preserve">
+    <value>SELECT 
+	T0."DocEntry"													AS "DocEntry"
+	, T0."DocNum"													AS "DocNum"
+	, T0."Serial"													AS "nota_fiscal"
+	, CONVERT(varchar(10), T0."TaxDate", 121)						AS "data_emissao"
+	, T2."TaxId0"													AS "emitente"
+	, ISNULL(T0."U_ChaveAcesso",b.KeyNfe)							AS "chave_acesso"
+	, T0."Serial"													AS "nr"
+	, 'MC'															AS "tipo"
+	, (SELECT COUNT(0) FROM RDN1 WHERE "DocEntry" = T0."DocEntry")	AS "qtde_itens"
+	, T0."CardCode"													AS "CardCode"
+	, 'false'														AS "apontamento_producao"	
+
+FROM 
+	"{0}"."dbo"."ORDN"  T0 INNER JOIN 
+	"{0}"."dbo"."OCRD" T1 ON T0."CardCode" = T1."CardCode" INNER JOIN 
+	"{0}"."dbo"."CRD7" T2 ON T1."CardCode" = T2."CardCode" AND T2."Address" = '' LEFT JOIN 
+	(SELECT x.DocEntry, x.DocType, y.Description, x.CompanyId, x.KeyNfe FROM [DBInvOne].[dbo].[Process] x INNER JOIN [DBInvOne].[dbo].[ProcessStatus] y ON x.StatusId = y.ID WHERE x.DocType = '16') b ON T0.DocEntry = b.DocEntry
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaNotasDevolucao" xml:space="preserve">
+    <value>SELECT  
+	T3."U_Codigo"
+	,T3."Code"
+FROM 
+	"{0}"."dbo"."@WMS_INTEGRACAO" T3
+WHERE 
+	T3."U_Status" = 1	-- Status na Tabela de Integração em Processamento
+	AND T3."U_Tipo" = 'DE'
+</value>
+  </data>
+  <data name="ConsultaNotasSaida" xml:space="preserve">
+    <value>SELECT  
+	T0."DocEntry"
+	,T3."Code"
+	,T0."KeyNfe"
+FROM 
+	"DBInvOne"."dbo"."Process" T0 INNER JOIN 
+	--"DBInvOne"."dbo"."ProcessStatus" T1 ON  T0."StatusId" = T1."ID" INNER JOIN 
+	"{0}"."dbo"."@WMS_INTEGRACAO" T3 ON T0."DocEntry" = T3."U_Codigo" AND T3."U_Tipo" = 'NF' --INNER JOIN
+	--"{0}"."dbo"."OINV" T4 ON T0."DocEntry" = T4."DocEntry"
+WHERE 
+	T0."DocType" = 13		-- Tipo Documento
+	AND T3."U_Status" = 1	-- Status na Tabela de Integração em Processamento
+	AND T0."StatusId" = 4	-- Satus Autorizda
+</value>
+  </data>
+  <data name="ConsultaNotaDevolucaoItens" xml:space="preserve">
+    <value>SELECT 
+	T0."ItemCode"		AS "pn"
+	, T0."Quantity"		AS "qtde"
+	, T0."Price"		AS "valor_unitario"
+	, '0'				AS "peso"
+FROM 
+	"{0}"."dbo"."RDN1" T0 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaNotaDevSaidaItens" xml:space="preserve">
+    <value>SELECT 
+	T0."ItemCode"		AS "pn"
+	, T0."Quantity"		AS "qtde"
+	, T0."Price"		AS "valor_unitario"
+	, '0'				AS "peso"
+FROM 
+	"{0}"."dbo"."RIN1" T0 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaOPSFechada" xml:space="preserve">
+    <value>SELECT  
+	T3."U_Codigo"	AS "DocEntry"
+	,T3."Code"		AS "Code"
+FROM 
+	"{0}"."dbo"."@WMS_INTEGRACAO" T3
+WHERE 
+	T3."U_Status" = 1	-- Status na Tabela de Integração em Processamento
+	AND T3."U_Tipo" = 'OPF'
+</value>
+  </data>
+  <data name="ConsultaToken" xml:space="preserve">
+    <value>SELECT 
+	T0."U_Token" 
+FROM 
+	OADM T0</value>
+  </data>
+  <data name="ConsultaNotasDevSaida" xml:space="preserve">
+    <value>SELECT  
+	T3."U_Codigo"
+	,T3."Code"
+FROM 
+	"{0}"."dbo"."@WMS_INTEGRACAO" T3
+WHERE 
+	T3."U_Status" = 1	-- Status na Tabela de Integração em Processamento
+	AND T3."U_Tipo" = 'DS'
+</value>
+  </data>
+  <data name="ConsultaProduto" xml:space="preserve">
+    <value>SELECT 
+	T0."ItemCode"		AS "codigo"
+	, T0."ItemCode"		AS "pn"
+	, T0."ItemName"		AS "descricao"
+	, T0."SalUnitMsr"	AS "unid_medida"
+	, T0."ItmsGrpCod"	AS "grupo"
+	, 'N'				AS "tipo"
+	, 'false'			AS "lote"
+	, 'false'			AS "serie"
+	, 'false'			AS "validade"
+	, 'false'			AS "inspecao_rec"
+	, 'false'			AS "inspecao_exp"
+	, 'false'			AS "laudo_rec"
+	, 'false'			AS "laudo_exp"
+	, 'FIFO'			AS "tipo_picking"
+	, 'A'				AS "categoria"
+FROM 
+	"{0}"."dbo"."OITM"  T0 
+WHERE 
+	T0."ItemCode" = '{1}'</value>
+  </data>
+  <data name="ConsultaNotaEntradaItens" xml:space="preserve">
+    <value>SELECT 
+	T0."ItemCode"		AS "pn"
+	, T0."Quantity"		AS "qtde"
+	, T0."Price"		AS "valor_unitario"
+	, '0'				AS "peso"
+FROM 
+	"{0}"."dbo"."PCH1" T0 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaOPFechada" xml:space="preserve">
+    <value>SELECT 
+	T0."DocEntry"													AS "DocEntry"
+	, T0."DocNum"													AS "DocNum"
+	, ''															AS "cliente_cnpj"
+	, T0."DocNum"													AS "pedido_venda"							
+	, CONVERT(varchar(16), T0."DueDate", 121)						AS "data_entrega"
+	, CONVERT(varchar(16), T0."DueDate", 121)						AS "data_emissao"
+	, '2'															AS "prefixo"	
+	, 'cod_rota'													AS "cod_rota"
+	, '1'															AS "sequencia_entrega"
+	, ''															AS "transp_nome"
+	, '0001'														AS "cod_ponto_entrega"
+	, 'Linha principal'												AS "desc_ponto_entrega"
+	, T0."PlannedQty"												AS "qtde_itens"
+	, T0."DocNum"													AS "nota_fiscal"
+	, ''															AS "seria"
+	, ''															AS "CardCode"
+	, T0."Warehouse"												AS "canal"
+	, 'MP'															AS "tipo"
+	, 'false'														AS "apontamento_producao"	
+	, ''															AS "emitente"	
+	, ''															AS "chave_acesso"	
+	, T0."DocNum"													AS "nr"	
+FROM 
+	"{0}"."dbo"."OWOR"  T0 --INNER JOIN 
+	--"{0}"."dbo"."OCRD" T1 ON T0."CardCode" = T1."CardCode" INNER JOIN 
+	--"{0}"."dbo"."CRD7" T2 ON T1."CardCode" = T2."CardCode" AND T1."ShipToDef" =T2."Address" INNER JOIN 
+	--"{0}"."dbo"."INV12" T3 ON T0."DocEntry" = T3."DocEntry" LEFT JOIN 
+	--"{0}"."dbo"."OCRD" T4 ON T3."Carrier" = T4."CardCode" 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaNotasEntrada" xml:space="preserve">
+    <value>SELECT  
+	T3."U_Codigo"
+	,T3."Code"
+FROM 
+	"{0}"."dbo"."@WMS_INTEGRACAO" T3
+WHERE 
+	T3."U_Status" = 1	-- Status na Tabela de Integração em Processamento
+	AND T3."U_Tipo" = 'NE'
+</value>
+  </data>
+  <data name="ConsultaNotaSaidaItens" xml:space="preserve">
+    <value>SELECT 
+	T0."ItemCode"		AS "pn"
+	, T0."Quantity"		AS "qtde"
+FROM 
+	"{0}"."dbo"."INV1" T0 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaNotaDevSaida" xml:space="preserve">
+    <value>SELECT 
+	T0."DocEntry"													AS "DocEntry"
+	, T0."DocNum"													AS "DocNum"
+	, T0."Serial"													AS "nota_fiscal"
+	, CONVERT(varchar(10), T0."TaxDate", 121)						AS "data_emissao"
+	, T2."TaxId0"													AS "emitente"
+	, T0."U_ChaveAcesso"											AS "chave_acesso"
+	, T0."Serial"													AS "nr"
+	, 'MC'															AS "tipo"
+	, (SELECT COUNT(0) FROM RIN1 WHERE "DocEntry" = T0."DocEntry")	AS "qtde_itens"
+	, T0."CardCode"													AS "CardCode"
+	, 'false'														AS "apontamento_producao"	
+
+FROM 
+	"{0}"."dbo"."ORIN"  T0 INNER JOIN 
+	"{0}"."dbo"."OCRD" T1 ON T0."CardCode" = T1."CardCode" INNER JOIN 
+	"{0}"."dbo"."CRD7" T2 ON T1."CardCode" = T2."CardCode" AND T2."Address" = ''
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="UpdateIntegracao" xml:space="preserve">
+    <value>UPDATE 
+	"{0}"."dbo"."@WMS_INTEGRACAO"  
+SET 
+	"U_Status" = {4} 
+	, "U_Mensagem" = '{3}'
+	, "U_JsonEnvio" = '{5}'
+	, "U_JsonRetorno" = '{6}'
+	, "U_DataFim" = '{7}'
+WHERE 
+	"U_Tipo" = '{2}'
+	AND  "U_Codigo" = '{1}'</value>
+  </data>
+  <data name="ConsultaGrupoItem" xml:space="preserve">
+    <value>SELECT 
+	T1."ItmsGrpCod"		AS "codigo"
+	, T1."ItmsGrpNam"	AS "nome"
+FROM 
+	"{0}"."dbo"."OITM" T0  INNER JOIN 
+	"{0}"."dbo"."OITB" T1 ON T0."ItmsGrpCod" = T1."ItmsGrpCod"
+WHERE 
+	T0."ItemCode" = '{1}'</value>
+  </data>
+  <data name="ConsultaNotaSaida" xml:space="preserve">
+    <value>SELECT 
+	T0."DocEntry"													AS "DocEntry"
+	, T0."DocNum"													AS "DocNum"
+	, T2."TaxId0"													AS "cliente_cnpj"
+	, T0."DocNum"													AS "pedido_venda"							
+	, CONVERT(varchar(16), T0."DocDate", 121)						AS "data_entrega"
+	, '1'															AS "prefixo"	
+	, 'cod_rota'													AS "cod_rota"
+	, '1'															AS "sequencia_entrega"
+	, T4."CardName"													AS "transp_nome"
+	--, T3."QoP"														AS "qtde_itens"
+	, ''															AS "cod_ponto_entrega"
+	, ''															AS "desc_ponto_entrega"
+	,(SELECT COUNT(0) FROM INV1 WHERE "DocEntry" = T0."DocEntry")	AS "qtde_itens"
+	,T0."Serial"													AS "nota_fiscal"
+	,T0."SeriesStr"													AS "seria"
+	,T1."CardCode"													AS "CardCode"
+	,(SELECT TOP 1 TT0."WhsCode" FROM INV1 TT0 WHERE TT0.[DocEntry] = T0."DocEntry")	AS "canal"
+FROM 
+	"{0}"."dbo"."OINV"  T0 INNER JOIN 
+	"{0}"."dbo"."OCRD" T1 ON T0."CardCode" = T1."CardCode" INNER JOIN 
+	--"{0}"."dbo"."CRD7" T2 ON T1."CardCode" = T2."CardCode" AND T1."ShipToDef" =T2."Address" INNER JOIN 
+	"{0}"."dbo"."CRD7" T2 ON T1."CardCode" = T2."CardCode" AND ISNULL(T2."Address",'') = ''  INNER JOIN 
+	"{0}"."dbo"."INV12" T3 ON T0."DocEntry" = T3."DocEntry" LEFT JOIN 
+	"{0}"."dbo"."OCRD" T4 ON T3."Carrier" = T4."CardCode" 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaOPS" xml:space="preserve">
+    <value>SELECT  
+	T3."U_Codigo"	AS "DocEntry"
+	,T3."Code"		AS "Code"
+FROM 
+	"{0}"."dbo"."@WMS_INTEGRACAO" T3
+WHERE 
+	T3."U_Status" = 1	-- Status na Tabela de Integração em Processamento
+	AND T3."U_Tipo" = 'OP'
+</value>
+  </data>
+  <data name="ConsultaEmpresa" xml:space="preserve">
+    <value>
+SELECT 
+	SUBSTRING(T0."CardName",1,60)													AS "xnome"
+	, SUBSTRING(T0."CardFName",1,60)												AS "xfant"
+	--, CASE WHEN ISNULL(T1."TaxId0",'') = '' THEN T1."TaxId4" ELSE T1."TaxId0" END	AS "cnpj_cpf"
+	, CASE 
+		WHEN ISNULL(T1."TaxId0",'') &lt;&gt; '' 
+		THEN T1."TaxId0" 
+		ELSE  CASE 
+				WHEN ISNULL(T1."TaxId4",'') &lt;&gt; '' 
+				THEN T1."TaxId4"  
+				ELSE  CASE 
+						WHEN ISNULL(T1."TaxId5",'') &lt;&gt; '' 
+						THEN SUBSTRING(T0."CardCode"+'000000000000000',1,14)
+						ELSE ''
+						END
+				END	 
+		END																			AS "cnpj_cpf"
+	, T1."TaxId1"																	AS "ie"
+	, T0."E_Mail"																	AS "email"
+	, SUBSTRING(T0."Phone2" + ' ' + T0."Phone1"	,1,14)								AS "fone"
+FROM 
+	"{0}"."dbo"."OCRD"  T0 INNER JOIN 
+	--"{0}"."dbo"."CRD7" T1 ON T0."CardCode" = T1."CardCode" AND T0."ShipToDef" =T1."Address" 
+	"{0}"."dbo"."CRD7" T1 ON T0."CardCode" = T1."CardCode" AND ISNULL(T1."Address",'') = ''
+	
+WHERE 
+	T0."CardCode" = '{1}'
+</value>
+  </data>
+  <data name="ConsultaNotaEntrada" xml:space="preserve">
+    <value>SELECT 
+	T0."DocEntry"													AS "DocEntry"
+	, T0."DocNum"													AS "DocNum"
+	, T0."Serial"													AS "nota_fiscal"
+	, CONVERT(varchar(10), T0."TaxDate", 121)						AS "data_emissao"
+	, T2."TaxId0"													AS "emitente"
+	, ISNULL(T0."U_ChaveAcesso",b.KeyNfe)							AS "chave_acesso"
+	, T0."Serial"													AS "nr"
+	, 'MC'															AS "tipo"
+	, (SELECT COUNT(0) FROM PCH1 WHERE "DocEntry" = T0."DocEntry")	AS "qtde_itens"
+	, T0."CardCode"													AS "CardCode"
+	, 'false'														AS "apontamento_producao"	
+
+FROM 
+	"{0}"."dbo"."OPCH"  T0 INNER JOIN 
+	"{0}"."dbo"."OCRD" T1 ON T0."CardCode" = T1."CardCode" INNER JOIN 
+	"{0}"."dbo"."CRD7" T2 ON T1."CardCode" = T2."CardCode" AND T2."Address" = '' LEFT JOIN 
+	(SELECT x.DocEntry, x.DocType, y.Description, x.CompanyId, x.KeyNfe FROM [DBInvOne].[dbo].[Process] x INNER JOIN [DBInvOne].[dbo].[ProcessStatus] y ON x.StatusId = y.ID WHERE x.DocType = '18') b ON T0.DocEntry = b.DocEntry
+
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaOPItens" xml:space="preserve">
+    <value>SELECT 
+	T0."ItemCode"		AS "pn"
+	, T0."PlannedQty"	AS "qtde"
+FROM 
+	"{0}"."dbo"."WOR1" T0 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+  <data name="ConsultaPN" xml:space="preserve">
+    <value>SELECT 
+	T0."CardCode" 
+FROM 
+	"{0}"."dbo"."OCRD"  T0
+WHERE 
+	T0."CardType" = '{1}'
+	AND T0."validFor" = 'Y'</value>
+  </data>
+  <data name="ConsultaOP" xml:space="preserve">
+    <value>SELECT 
+	T0."DocEntry"													AS "DocEntry"
+	, T0."DocNum"													AS "DocNum"
+	, ''															AS "cliente_cnpj"
+	, T0."DocNum"													AS "pedido_venda"							
+	, CONVERT(varchar(16), T0."DueDate", 121)						AS "data_entrega"
+	, '2'															AS "prefixo"	
+	, 'cod_rota'													AS "cod_rota"
+	, '1'															AS "sequencia_entrega"
+	, ''															AS "transp_nome"
+	, '0001'														AS "cod_ponto_entrega"
+	, 'Linha principal'												AS "desc_ponto_entrega"
+	--, T0."PlannedQty"												AS "qtde_itens"
+	, (SELECT COUNT(0) FROM WOR1 WHERE "DocEntry" = T0."DocEntry")	AS "qtde_itens"
+	,''																AS "nota_fiscal"
+	,''																AS "seria"
+	,''																AS "CardCode"
+	,T0."Warehouse"													AS "canal"
+
+FROM 
+	"{0}"."dbo"."OWOR"  T0 --INNER JOIN 
+	--"{0}"."dbo"."OCRD" T1 ON T0."CardCode" = T1."CardCode" INNER JOIN 
+	--"{0}"."dbo"."CRD7" T2 ON T1."CardCode" = T2."CardCode" AND T1."ShipToDef" =T2."Address" INNER JOIN 
+	--"{0}"."dbo"."INV12" T3 ON T0."DocEntry" = T3."DocEntry" LEFT JOIN 
+	--"{0}"."dbo"."OCRD" T4 ON T3."Carrier" = T4."CardCode" 
+WHERE 
+	T0."DocEntry" = {1}</value>
+  </data>
+</root>
