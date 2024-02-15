@@ -149,19 +149,36 @@ namespace IntegracoesVETX.DAL
                     }
                 }
                 oOrderNum = oOrder.Add();
+
+                SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
+                string sql = string.Empty;
+
                 if (oOrderNum != 0)
                 {
                     messageError = oCompany.GetLastErrorDescription();
                     log.WriteLogTable(oCompany, EnumTipoIntegracao.PedidoVenda, pedido.orderId, "", EnumStatusIntegracao.Erro, messageError);
                     log.WriteLogPedido("InsertOrder error SAP: " + messageError);
                     Marshal.ReleaseComObject(oOrder);
+
+                    // modifica status para 2 = Erro
+                    sql = string.Format(DAL.SQL.Queries.VTEX_PedidoStatus, pedido.orderId, 2);
+                    oRS.DoQuery(sql);
+                    Marshal.ReleaseComObject(oRS);
+
                     return oOrderNum;
                 }
+
                 messageError = "";
                 string docNum = oCompany.GetNewObjectKey();
                 log.WriteLogTable(oCompany, EnumTipoIntegracao.PedidoVenda, pedido.orderId, docNum, EnumStatusIntegracao.Sucesso, "Pedido de venda inserido com sucesso.");
                 log.WriteLogPedido("Pedido de venda inserido com sucesso.");
                 Marshal.ReleaseComObject(oOrder);
+
+                // modifica status para 1 = OK
+                sql = string.Format(DAL.SQL.Queries.VTEX_PedidoStatus, pedido.orderId, 1);
+                oRS.DoQuery(sql);
+                Marshal.ReleaseComObject(oRS);
+
                 return oOrderNum;
             }
             catch (Exception e)

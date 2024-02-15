@@ -261,6 +261,9 @@ namespace IntegracoesVETX.Business
                             }
                         }
                         InserirPedidoVenda(oCompany, pedidoVtex, evento);
+
+                        oRS.MoveNext();
+
                     }
 
                 }

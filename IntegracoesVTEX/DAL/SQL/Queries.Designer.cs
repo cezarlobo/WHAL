@@ -61,7 +61,7 @@ namespace IntegracoesVETX.DAL.SQL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to EXEC SP_WAHL_PedidoVTEX_Adicionar &apos;{0}&apos;.
+        ///   Looks up a localized string similar to EXEC SP_WAHL_PedidoVTEX_Adicionar &apos;{0}&apos;, &apos;{1}&apos;.
         /// </summary>
         internal static string VTEX_InserirPedido {
             get {
@@ -71,7 +71,8 @@ namespace IntegracoesVETX.DAL.SQL {
         
         /// <summary>
         ///   Looks up a localized string similar to select 
-        ///	U_NUM_VTEX 
+        ///	U_NUM_VTEX,
+        ///	U_EVENTO
         ///from 
         ///	[@WAHL_VTEX_PEDIDOS] 
         ///where 
@@ -82,6 +83,15 @@ namespace IntegracoesVETX.DAL.SQL {
         internal static string VTEX_PedidosIntegrar {
             get {
                 return ResourceManager.GetString("VTEX_PedidosIntegrar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EXEC SP_WAHL_PedidoVTEX_Status &apos;{0}&apos;, &apos;{1}&apos;.
+        /// </summary>
+        internal static string VTEX_PedidoStatus {
+            get {
+                return ResourceManager.GetString("VTEX_PedidoStatus", resourceCulture);
             }
         }
     }

@@ -146,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DAL\Scripts\SP_WAHL_PedidoVTEX_Adicionar.sql" />
+    <Content Include="DAL\Scripts\SP_WAHL_PedidoVTEX_Status.sql" />
+    <Content Include="DAL\SQL\VTEX_PedidoStatus.sql" />
     <Content Include="DAL\SQL\VTEX_InserirPedido.sql" />
     <Content Include="DAL\SQL\VTEX_PedidosIntegrar.sql" />
   </ItemGroup>

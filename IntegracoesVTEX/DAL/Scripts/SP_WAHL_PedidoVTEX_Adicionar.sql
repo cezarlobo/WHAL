@@ -1,7 +1,7 @@
 ﻿alter procedure SP_WAHL_PedidoVTEX_Adicionar
 (
 	@NUMERO_PEDIDO varchar(20),
-	@EVENTO varchar(100)
+	@EVENTO ntext
 )
 as 
 begin
