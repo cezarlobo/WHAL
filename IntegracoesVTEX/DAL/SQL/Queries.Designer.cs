@@ -61,6 +61,21 @@ namespace IntegracoesVETX.DAL.SQL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT  DISTINCT  U.[U_CodRastreio] AS codigoRastreamento , R.CardCode AS cardCode , R.CardName AS nomeDestinatario , R.E_Mail AS emailDestinatario 
+        ///, T2.Serial AS invoiceNumber , T0.DocNum AS docNPV  , T0.NumAtCard AS idOrderVtex  , T0.U_NumPedEXT AS idOrderVtex2 , T2.DocEntry AS docEntry  
+        ///, T2.DocNum AS docNum 
+        ///FROM    ORDR T0  
+        ///INNER JOIN INV1 T1 ON T0.DocEntry = T1.BaseEntry   
+        ///INNER JOIN OINV T2 ON T1.DocEntry = T2.DocEntry and T0.BPLId = T2.BPLId   
+        ///INNER JOIN [DBInvOne].[dbo].[Process] T3 on T [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string BuscaCodRastreio {
+            get {
+                return ResourceManager.GetString("BuscaCodRastreio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EXEC SP_WAHL_PedidoVTEX_Adicionar &apos;{0}&apos;, &apos;{1}&apos;.
         /// </summary>
         internal static string VTEX_InserirPedido {

@@ -50,16 +50,16 @@ namespace IntegracoesVTEX
             oCompany = CommonConn.InitializeCompany();
         }
 
-        public void TesteWriter()
-        {
-            IntegracaoService integracaoService = new IntegracaoService();
-            string horaAtual = string.Format("{0:t}", DateTime.Now);
-            log.WriteLogPedido("Hora atual executada" + horaAtual);
-            if (horaAtual == tempoDefinidoExecucaoRastreamento)
-            {
-                integracaoService.IniciarIntegracaoRetornoRastreamento(oCompany);
-            }
-        }
+        //public void TesteWriter()
+        //{
+        //    IntegracaoService integracaoService = new IntegracaoService();
+        //    string horaAtual = string.Format("{0:t}", DateTime.Now);
+        //    log.WriteLogPedido("Hora atual executada" + horaAtual);
+        //    if (horaAtual == tempoDefinidoExecucaoRastreamento)
+        //    {
+        //        integracaoService.IniciarIntegracaoRetornoRastreamento(oCompany);
+        //    }
+        //}
 
         protected override void OnStart(string[] args)
         {
@@ -112,7 +112,9 @@ namespace IntegracoesVTEX
                 if (jobRetornoRastreamento)
                 {
                     timerRetRastreamento = new Timer();
-                    timerRetRastreamento.Interval = TimeSpan.FromMinutes(1.0).TotalMilliseconds;
+                    //timerRetRastreamento.Interval = TimeSpan.FromMinutes(1.0).TotalMilliseconds;
+                    string intervaloExecucaoCodRastreio = ConfigurationManager.AppSettings["intervaloExecucaoCodRastreio"];
+                    timerRetRastreamento.Interval = Convert.ToInt32(intervaloExecucaoCodRastreio);
                     timerRetRastreamento.Enabled = true;
                     timerRetRastreamento.Elapsed += IntegracaoRetornoRastreamento;
                 }
@@ -225,10 +227,12 @@ namespace IntegracoesVTEX
 
         private void IntegracaoRetornoRastreamento(object sender, ElapsedEventArgs e)
         {
-            string horaAtual = string.Format("{0:t}", DateTime.Now);
-            log.WriteLogPedido("Hora atual: " + horaAtual + " / TempoDefinido: " + tempoDefinidoExecucaoRastreamento);
-            if (horaAtual == tempoDefinidoExecucaoRastreamento)
+            try
             {
+                //string horaAtual = string.Format("{0:t}", DateTime.Now);
+                //log.WriteLogPedido("Hora atual: " + horaAtual + " / TempoDefinido: " + tempoDefinidoExecucaoRastreamento);
+                //if (horaAtual == tempoDefinidoExecucaoRastreamento)
+                //{
                 timerRetRastreamento.Enabled = false;
                 timerRetRastreamento.AutoReset = false;
                 log.WriteLogPedido("#### INTEGRAÇÃO RETORNO CÓD. RASTREIO INICIADA");
@@ -237,6 +241,12 @@ namespace IntegracoesVTEX
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
+                //}
+            }
+            catch (Exception ex)
+            {
+                log.WriteLogPedido("Exception IntegracaoCodRastreio " + ex.Message);
+                throw;
             }
         }
 

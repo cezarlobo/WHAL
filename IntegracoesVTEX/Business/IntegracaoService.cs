@@ -540,6 +540,7 @@ namespace IntegracoesVETX.Business
                             idOrderVTEX = recordSet.Fields.Item("idOrderVtex2").Value.ToString();
                         }
                         string invoiceNumber = recordSet.Fields.Item("invoiceNumber").Value.ToString();
+                        string codRastreio = recordSet.Fields.Item("codigoRastreamento").Value.ToString();
                         var invoiceBody = new
                         {
                             trackingNumber = recordSet.Fields.Item("codigoRastreamento").Value.ToString(),
@@ -550,35 +551,39 @@ namespace IntegracoesVETX.Business
                         string docNum = recordSet.Fields.Item("docNum").Value.ToString();
                         Repositorio repositorio = new Repositorio();
                         Task<HttpResponseMessage> responseOrderVTEX = repositorio.BuscarPedido(idOrderVTEX);
-                        if (responseOrderVTEX.Result.IsSuccessStatusCode && JsonConvert.DeserializeObject<Pedido>(responseOrderVTEX.Result.Content.ReadAsStringAsync().Result).status.Equals("invoiced"))
+                        if (responseOrderVTEX.Result.IsSuccessStatusCode)
                         {
-                            Task<HttpResponseMessage> responseCodigoRastreio = repositorio.RetornoCodigoRastreio(invoiceBody, idOrderVTEX, invoiceNumber);
-                            if (responseCodigoRastreio.Result.IsSuccessStatusCode)
+                            var pedido = JsonConvert.DeserializeObject<Pedido>(responseOrderVTEX.Result.Content.ReadAsStringAsync().Result);
+                            if (pedido.status.Equals("invoiced"))
                             {
-                                string nomeDestinatario = recordSet.Fields.Item("nomeDestinatario").Value.ToString();
-                                string emailDestinatario = recordSet.Fields.Item("emailDestinatario").Value.ToString();
-                                log.WriteLogTable(oCompany, EnumTipoIntegracao.CodRastreamento, idOrderVTEX, docNum, EnumStatusIntegracao.Sucesso, "Cód. Rastreamento " + recordSet.Fields.Item("codigoRastreamento").Value.ToString() + " da NF " + invoiceNumber + " enviado para VTEX com sucesso.");
-                                if (EnviarEmailCodRastreamento(nomeDestinatario, emailDestinatario, recordSet.Fields.Item("codigoRastreamento").Value.ToString(), invoiceNumber))
+                                Task<HttpResponseMessage> responseCodigoRastreio = repositorio.RetornoCodigoRastreio(invoiceBody, idOrderVTEX, invoiceNumber);
+                                if (responseCodigoRastreio.Result.IsSuccessStatusCode)
                                 {
-                                    log.WriteLogPedido("E-mail de Cód. Rastreamento " + recordSet.Fields.Item("codigoRastreamento").Value.ToString() + " da NF " + invoiceNumber + " enviado com sucesso.");
+                                    string nomeDestinatario = recordSet.Fields.Item("nomeDestinatario").Value.ToString();
+                                    string emailDestinatario = recordSet.Fields.Item("emailDestinatario").Value.ToString();
+                                    log.WriteLogTable(oCompany, EnumTipoIntegracao.CodRastreamento, idOrderVTEX, docNum, EnumStatusIntegracao.Sucesso, "Cód. Rastreamento " + recordSet.Fields.Item("codigoRastreamento").Value.ToString() + " da NF " + invoiceNumber + " enviado para VTEX com sucesso.");
+                                    //if (EnviarEmailCodRastreamento(nomeDestinatario, emailDestinatario, recordSet.Fields.Item("codigoRastreamento").Value.ToString(), invoiceNumber))
+                                    //{
+                                    //    log.WriteLogPedido("E-mail de Cód. Rastreamento " + recordSet.Fields.Item("codigoRastreamento").Value.ToString() + " da NF " + invoiceNumber + " enviado com sucesso.");
+                                    //}
+                                    //else
+                                    //{
+                                    //    log.WriteLogPedido("Falha ao enviar e-mail com Cód. Rastreio " + recordSet.Fields.Item("codigoRastreamento").Value.ToString() + " da NF " + invoiceNumber + " para o destinaário " + emailDestinatario);
+                                    //}
+                                    if (orders.AtualizarPedidoVendaIntRastreamento(oCompany, Convert.ToInt32(docEntry), codRastreio) != 0)
+                                    {
+                                        log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idOrderVTEX, docNum, EnumStatusIntegracao.Erro, "Código de rastreamento do Pedido " + docNum + " retornado porém não foi possível atualizar o campo de usuário U_ValidaEnvioCodRastreio. " + oCompany.GetLastErrorDescription());
+                                        log.WriteLogPedido("Falha ao atualizar Pedido de Venda " + recordSet.Fields.Item("cardCode").Value.ToString());
+                                    }
                                 }
-                                else
+                                else if (responseCodigoRastreio.Result.StatusCode == HttpStatusCode.Unauthorized)
                                 {
-                                    log.WriteLogPedido("Falha ao enviar e-mail com Cód. Rastreio " + recordSet.Fields.Item("codigoRastreamento").Value.ToString() + " da NF " + invoiceNumber + " para o destinaário " + emailDestinatario);
+                                    log.WriteLogPedido("Sem autorização ao retornar Cód.Rastreio p/ idOrderVTEX: " + idOrderVTEX);
                                 }
-                                if (orders.AtualizarPedidoVendaIntRastreamento(oCompany, Convert.ToInt32(docEntry)) != 0)
+                                else if (responseCodigoRastreio.Result.StatusCode == HttpStatusCode.BadRequest)
                                 {
-                                    log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idOrderVTEX, docNum, EnumStatusIntegracao.Erro, "Código de rastreamento do Pedido " + docNum + " retornado porém não foi possível atualizar o campo de usuário U_ValidaEnvioCodRastreio. " + oCompany.GetLastErrorDescription());
-                                    log.WriteLogPedido("Falha ao atualizar Pedido de Venda " + recordSet.Fields.Item("cardCode").Value.ToString());
+                                    log.WriteLogPedido("Requisicao mal formatada ao retornar Cód.Rastreio p/ idOrderVTEX: " + idOrderVTEX);
                                 }
-                            }
-                            else if (responseCodigoRastreio.Result.StatusCode == HttpStatusCode.Unauthorized)
-                            {
-                                log.WriteLogPedido("Sem autorização ao retornar Cód.Rastreio p/ idOrderVTEX: " + idOrderVTEX);
-                            }
-                            else if (responseCodigoRastreio.Result.StatusCode == HttpStatusCode.BadRequest)
-                            {
-                                log.WriteLogPedido("Requisicao mal formatada ao retornar Cód.Rastreio p/ idOrderVTEX: " + idOrderVTEX);
                             }
                         }
                         recordSet.MoveNext();
