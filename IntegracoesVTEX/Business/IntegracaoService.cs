@@ -417,11 +417,11 @@ namespace IntegracoesVETX.Business
                                     if (response.Result.IsSuccessStatusCode)
                                     {
                                         log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idPedidoVTEX, docSAP, EnumStatusIntegracao.Sucesso, "Número NF " + invoice.invoiceNumber + " enviado para a Vtex com sucesso.");
-                                        log.WriteLogPedido("Número NF para o Pedido de Venda " + docSAP + " enviado para a Vtex com sucesso.");
+                                        log.WriteLogRetornoNF("Número NF para o Pedido de Venda " + docSAP + " enviado para a Vtex com sucesso.");
                                         if (orders.AtualizarPedidoVenda(oCompany, Convert.ToInt32(externalId)) != 0)
                                         {
                                             log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idPedidoVTEX, docSAP, EnumStatusIntegracao.Erro, "Número NF " + invoice.invoiceNumber + " retornado porém não foi possivél atualizar campo de usuário (U_EnvioNFVTEX) do Pedido de Venda");
-                                            log.WriteLogPedido("Falha ao atualizar Pedido de Venda " + docSAP);
+                                            log.WriteLogRetornoNF("Falha ao atualizar Pedido de Venda " + docSAP);
                                         }
                                     }
                                     else
@@ -430,14 +430,14 @@ namespace IntegracoesVETX.Business
                                         if (errorResponse != null)
                                         {
                                             log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idPedidoVTEX, docSAP, EnumStatusIntegracao.Erro, errorResponse.error.message);
-                                            log.WriteLogPedido("Falha ao retornar número da Nota Fiscal " + docSAP + " para a Vtex");
+                                            log.WriteLogRetornoNF("Falha ao retornar número da Nota Fiscal " + docSAP + " para a Vtex - Retorno API VTEX" + errorResponse.error.message);
                                         }
                                     }
                                 }
                                 else
                                 {
                                     log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idPedidoVTEX, docSAP, EnumStatusIntegracao.Erro, "Pedido com status de \"cancelado\" na VTEX.");
-                                    log.WriteLogPedido("Pedido com status de \"cancelado\" na VTEX.");
+                                    log.WriteLogRetornoNF("Pedido com status de \"cancelado\" na VTEX.");
                                     orders.AtualizarPedidoVenda(oCompany, Convert.ToInt32(externalId));
                                 }
                             }
@@ -445,11 +445,11 @@ namespace IntegracoesVETX.Business
                         else
                         {
                             log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idPedidoVTEX, docSAP, EnumStatusIntegracao.Erro, "Id do Pedido VTEX (NumAtCard e U_NumPedEXT) do Pedido de Venda " + docNPV + " em branco.");
-                            log.WriteLogPedido("Falha ao retornar número da Nota Fiscal " + docSAP + " para a Vtex - Id do Pedido VTEX (NumAtCard) do Pedido de Venda " + docNPV + " em branco.");
+                            log.WriteLogRetornoNF("Falha ao retornar número da Nota Fiscal " + docSAP + " para a Vtex - Id do Pedido VTEX (NumAtCard) do Pedido de Venda " + docNPV + " em branco.");
                             if (orders.AtualizarPedidoVenda(oCompany, Convert.ToInt32(externalId)) != 0)
                             {
                                 log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idPedidoVTEX, docSAP, EnumStatusIntegracao.Erro, "Número NF " + invoice.invoiceNumber + " retornado porém não foi possivél atualizar campo de usuário (U_EnvioNFVTEX) do Pedido de Venda");
-                                log.WriteLogPedido("Falha ao atualizar Pedido de Venda " + docSAP);
+                                log.WriteLogRetornoNF("Falha ao atualizar Pedido de Venda " + docSAP);
                             }
                         }
                         recordSet.MoveNext();
@@ -462,7 +462,7 @@ namespace IntegracoesVETX.Business
             }
             catch (Exception e)
             {
-                log.WriteLogPedido("Exception RetornoNotaFiscal " + e.Message);
+                log.WriteLogRetornoNF("Exception na rotina RetornoNotaFiscal " + e.Message);
             }
         }
 
@@ -572,18 +572,22 @@ namespace IntegracoesVETX.Business
                                     //}
                                     if (orders.AtualizarPedidoVendaIntRastreamento(oCompany, Convert.ToInt32(docEntry), codRastreio) != 0)
                                     {
-                                        log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idOrderVTEX, docNum, EnumStatusIntegracao.Erro, "Código de rastreamento do Pedido " + docNum + " retornado porém não foi possível atualizar o campo de usuário U_ValidaEnvioCodRastreio. " + oCompany.GetLastErrorDescription());
-                                        log.WriteLogPedido("Falha ao atualizar Pedido de Venda " + recordSet.Fields.Item("cardCode").Value.ToString());
+                                        log.WriteLogTable(oCompany, EnumTipoIntegracao.NF, idOrderVTEX, docNum, EnumStatusIntegracao.Erro, "Código de rastreamento do PV " + docNum + " retornado, porém não foi possível atualizar a NF U_ValidaEnvioCodRastreio. " + oCompany.GetLastErrorDescription());
+                                        log.WriteLogRetornoCodRastreio("Falha ao atualizar NF " + recordSet.Fields.Item("cardCode").Value.ToString());
                                     }
                                 }
                                 else if (responseCodigoRastreio.Result.StatusCode == HttpStatusCode.Unauthorized)
                                 {
-                                    log.WriteLogPedido("Sem autorização ao retornar Cód.Rastreio p/ idOrderVTEX: " + idOrderVTEX);
+                                    log.WriteLogRetornoCodRastreio("Sem autorização ao retornar Cód.Rastreio p/ idOrderVTEX: " + idOrderVTEX);
                                 }
                                 else if (responseCodigoRastreio.Result.StatusCode == HttpStatusCode.BadRequest)
                                 {
-                                    log.WriteLogPedido("Requisicao mal formatada ao retornar Cód.Rastreio p/ idOrderVTEX: " + idOrderVTEX);
+                                    log.WriteLogRetornoCodRastreio("Requisicao mal formatada ao retornar Cód.Rastreio p/ idOrderVTEX: " + idOrderVTEX);
                                 }
+                            }
+                            else
+                            {
+                                log.WriteLogRetornoCodRastreio("Rotina executada ID não esta no status de Faturado " + idOrderVTEX);
                             }
                         }
                         recordSet.MoveNext();
@@ -591,7 +595,7 @@ namespace IntegracoesVETX.Business
                 }
                 else
                 {
-                    log.WriteLogPedido("Nenhum código de rastreio a ser enviado.");
+                    log.WriteLogRetornoCodRastreio("Nenhum código de rastreio a ser enviado.");
                 }
                 if (recordSet != null)
                 {
@@ -600,7 +604,7 @@ namespace IntegracoesVETX.Business
             }
             catch (Exception e)
             {
-                log.WriteLogPedido("Exception EnvioCod.Rastreamento " + e.Message);
+                log.WriteLogRetornoCodRastreio("Exception Envio para VTEX do Cod. Rastreio " + e.Message);
             }
         }
 
@@ -625,7 +629,7 @@ namespace IntegracoesVETX.Business
             }
             catch (Exception e)
             {
-                log.WriteLogPedido("Excpetion EnviarEmailCodRastreamento " + e.Message);
+                log.WriteLogRetornoCodRastreio("Excpetion EnviarEmailCodRastreamento " + e.Message);
                 return false;
             }
         }

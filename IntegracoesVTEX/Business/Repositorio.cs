@@ -299,7 +299,7 @@ namespace IntegracoesVETX.Business
             }
             catch (HttpRequestException e)
             {
-                log.WriteLogPedido("Exception RetornoNotaFiscal " + e.InnerException.Message);
+                log.WriteLogRetornoNF("Exception RetornoNotaFiscal " + e.InnerException.Message);
                 throw;
             }
         }
@@ -332,7 +332,7 @@ namespace IntegracoesVETX.Business
 
             try
             {
-                log.WriteLogPedido("Retorno codigo rastreio: " + idOrderVtex);
+                log.WriteLogRetornoCodRastreio("Retorno codigo rastreio: " + idOrderVtex);
 
                 string uri = "api/oms/pvt/orders/" + idOrderVtex + "/invoice/" + invoiceNumber;
 
@@ -355,6 +355,7 @@ namespace IntegracoesVETX.Business
                 }
                 catch (Exception ex)
                 {
+                    log.WriteLogRetornoCodRastreio("Erro awaiter " + ex.Message);
                     throw ex;
                 }
                 finally
@@ -366,7 +367,7 @@ namespace IntegracoesVETX.Business
             }
             catch (HttpRequestException e)
             {
-                log.WriteLogPedido("Exception RetornoCodigoRastreio " + e.InnerException.Message);
+                log.WriteLogRetornoCodRastreio("Exception RetornoCodigoRastreio " + e.InnerException.Message);
                 throw;
             }
             finally

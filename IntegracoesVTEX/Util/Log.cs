@@ -14,6 +14,10 @@ namespace IntegracoesVETX.Util
 
 		private static string _filePathPedido = ConfigurationManager.AppSettings["pathLogPedido"];
 
+		private static string _filePathCodRetRastreio = ConfigurationManager.AppSettings["pathLogCodRetRastreio"];
+
+		private static string _filePathLogRetornoNF = ConfigurationManager.AppSettings["pathLogRetornoNF"];
+
 		public static void WriteLogOld(string message)
 		{
 			try
@@ -70,6 +74,41 @@ namespace IntegracoesVETX.Util
 			try
 			{
 				using (StreamWriter sw = File.AppendText(_filePathPedido))
+				{
+					sw.WriteLine(DateTime.Now.ToString() + ": " + message);
+					sw.Flush();
+					sw.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		public void WriteLogRetornoCodRastreio(string message)
+		{
+			try
+			{
+				using (StreamWriter sw = File.AppendText(_filePathCodRetRastreio))
+				{
+					sw.WriteLine(DateTime.Now.ToString() + ": " + message);
+					sw.Flush();
+					sw.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+
+		public void WriteLogRetornoNF(string message)
+		{
+			try
+			{
+				using (StreamWriter sw = File.AppendText(_filePathLogRetornoNF))
 				{
 					sw.WriteLine(DateTime.Now.ToString() + ": " + message);
 					sw.Flush();

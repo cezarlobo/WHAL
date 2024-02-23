@@ -198,7 +198,7 @@ namespace IntegracoesVETX.DAL
                 if (oCompany.Connected)
                 {
                     recordSet = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                    _query = string.Format("SELECT T0.DocNum AS docNPV ,T0.NumAtCard AS idOrderVtex , T0.U_NumPedEXT AS idOrderVtex2 ,T2.DocEntry AS externalId ,T2.DocNum AS docSAP ,T2.Serial AS invoiceNumber ,T2.DocDate AS invoiceDate ,T3.KeyNfe AS nfeKey ,T0.PickRmrk AS shippingMethod ,T2.SeriesStr AS invoiceOrderSeries ,T1.ItemCode AS codItem ,T1.Price AS precoItem ,T1.Quantity AS qtdItem ,T0.DocTotal AS totalNF FROM    ORDR T0 INNER JOIN INV1 T1 ON T0.DocEntry = T1.BaseEntry  INNER JOIN OINV T2 ON T1.DocEntry = T2.DocEntry and T0.BPLId = T2.BPLId  INNER JOIN [DBInvOne].[dbo].[Process] T3 on T3.DocEntry = T2.DocEntry WHERE T0.U_PLATF = '{0}' AND    T2.U_EnvioNFVTEX IS NULL ORDER BY docNPV desc ", ConfigurationManager.AppSettings["Plataforma"]);
+                    _query = string.Format(DAL.SQL.Queries.SAP_DadosNF, ConfigurationManager.AppSettings["Plataforma"]);
                     recordSet.DoQuery(_query);
                     if (recordSet.RecordCount > 0)
                     {
@@ -209,7 +209,7 @@ namespace IntegracoesVETX.DAL
             catch (Exception e)
             {
                 log = new Log();
-                log.WriteLogEstoque("Exception recuperarSaldoEstoqueSAP " + e.Message);
+                log.WriteLogRetornoNF("Exception recuperar dados da NF SAP " + e.Message);
                 throw;
             }
             return recordSet;
@@ -224,7 +224,7 @@ namespace IntegracoesVETX.DAL
                 if (oCompany.Connected)
                 {
                     recordSet = (Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
-                    _query = string.Format(DAL.SQL.Queries.BuscaCodRastreio, ConfigurationManager.AppSettings["Plataforma"]);
+                    _query = string.Format(DAL.SQL.Queries.SAP_BuscaCodRastreio, ConfigurationManager.AppSettings["Plataforma"]);
                     recordSet.DoQuery(_query);
                     if (recordSet.RecordCount > 0)
                     {
@@ -235,7 +235,7 @@ namespace IntegracoesVETX.DAL
             catch (Exception e)
             {
                 log = new Log();
-                log.WriteLogEstoque("Exception recuperarCód.Rastreio " + e.Message);
+                log.WriteLogRetornoCodRastreio("Exception - recuperar dados do Cód.Rastreio no SAP" + e.Message);
                 throw;
             }
             return recordSet;
@@ -247,7 +247,7 @@ namespace IntegracoesVETX.DAL
             try
             {
                 oCompany = company;
-                log.WriteLogPedido("Atualizando Pedido de Venda - NF enviada p/ VTEX");
+                log.WriteLogRetornoNF("Atualizando Pedido de Venda - NF enviada p/ VTEX");
                 Documents oInvoice = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oInvoices);
                 if (oInvoice.GetByKey(docEntry))
                 {
@@ -255,7 +255,7 @@ namespace IntegracoesVETX.DAL
                     if (oInvoice.Update() != 0)
                     {
                         string messageError = oCompany.GetLastErrorDescription();
-                        log.WriteLogPedido("AtualizarPedidoVenda error SAP: " + messageError);
+                        log.WriteLogRetornoNF("Erro ao atualizar NF no SAP: " + messageError);
                         Marshal.ReleaseComObject(oInvoice);
                         return 1;
                     }
@@ -276,7 +276,7 @@ namespace IntegracoesVETX.DAL
             try
             {
                 oCompany = company;
-                log.WriteLogPedido("Atualizando Pedido de Venda - Código de Rastreio enviado p/ VTEX");
+                log.WriteLogRetornoCodRastreio("Atualizando NF - Com Código de Rastreio enviado p/ VTEX");
                 Documents oInvoice = (Documents)oCompany.GetBusinessObject(BoObjectTypes.oInvoices);
                 if (oInvoice.GetByKey(docEntry))
                 {
@@ -285,7 +285,7 @@ namespace IntegracoesVETX.DAL
                     if (oInvoice.Update() != 0)
                     {
                         string messageError = oCompany.GetLastErrorDescription();
-                        log.WriteLogPedido("AtualizarPedidoVenda error SAP: " + messageError);
+                        log.WriteLogRetornoCodRastreio("Erro ao atualizar no SAP: " + messageError);
                         Marshal.ReleaseComObject(oInvoice);
                         return 1;
                     }

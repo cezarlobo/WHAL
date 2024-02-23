@@ -191,7 +191,7 @@ namespace IntegracoesVTEX
             {
                 timerRetNF.Enabled = false;
                 timerRetNF.AutoReset = false;
-                log.WriteLogPedido("#### INTEGRAÇÃO RETORNO NF INICIALIZADA");
+                log.WriteLogRetornoNF("#### INTEGRAÇÃO RETORNO NF INICIALIZADA");
                 new IntegracaoService().RetornoNotaFiscal(oCompany);
                 timerRetNF.Enabled = true;
                 GC.Collect();
@@ -200,7 +200,7 @@ namespace IntegracoesVTEX
             }
             catch (Exception ex)
             {
-                log.WriteLogPedido("Exception IntegracaoRetornoNF " + ex.Message);
+                log.WriteLogRetornoNF("Exception IntegracaoRetornoNF " + ex.Message);
                 throw;
             }
         }
@@ -235,7 +235,7 @@ namespace IntegracoesVTEX
                 //{
                 timerRetRastreamento.Enabled = false;
                 timerRetRastreamento.AutoReset = false;
-                log.WriteLogPedido("#### INTEGRAÇÃO RETORNO CÓD. RASTREIO INICIADA");
+                log.WriteLogRetornoCodRastreio("#### INTEGRAÇÃO RETORNO CÓD. RASTREIO INICIADA");
                 new IntegracaoService().IniciarIntegracaoRetornoRastreamento(oCompany);
                 timerRetRastreamento.Enabled = true;
                 GC.Collect();
@@ -245,7 +245,7 @@ namespace IntegracoesVTEX
             }
             catch (Exception ex)
             {
-                log.WriteLogPedido("Exception IntegracaoCodRastreio " + ex.Message);
+                log.WriteLogRetornoCodRastreio("Exception IntegracaoCodRastreio " + ex.Message);
                 throw;
             }
         }
