@@ -9,6 +9,6 @@ INNER JOIN [DBInvOne].[dbo].[Process] T3 on tax.ID = t3.CompanyId and T3.DocEntr
 INNER JOIN OCRD R ON R.CardCode = T0.CardCode 
 INNER JOIN [WahlClipper].[dbo].[@WAHL_COD_RASTREIO] U ON U.[U_NumNF] = T2.Serial 
 WHERE T0.U_PLATF = '{0}' AND T2.U_EnvioNFVTEX = 'S' AND (T2.U_ValidaEnvioCodRastreio IS NULL OR T2.U_ValidaEnvioCodRastreio = '') 
-AND T2.Serial IN (SELECT DISTINCT [U_NumNF] FROM [WahlClipper].[dbo].[@WAHL_COD_RASTREIO]) AND (R.E_Mail IS NOT NULL OR R.E_Mail <> '') AND YEAR (T2.TaxDate) >= '2024'
+AND T2.Serial IN (SELECT DISTINCT [U_NumNF] FROM [WahlClipper].[dbo].[@WAHL_COD_RASTREIO]) AND (R.E_Mail IS NOT NULL OR R.E_Mail <> '') AND T2.TaxDate >= '2024-02-10'
 and ISNULL(T2.NumAtCard,'') <> ''
 ORDER BY docNPV DESC  

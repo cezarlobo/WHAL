@@ -587,7 +587,7 @@ namespace IntegracoesVETX.Business
                             }
                             else
                             {
-                                log.WriteLogRetornoCodRastreio("Rotina executada ID não esta no status de Faturado " + idOrderVTEX);
+                                log.WriteLogRetornoCodRastreio("Rotina executada e não esta no status de Faturado o pedido ID " + idOrderVTEX);
                             }
                         }
                         recordSet.MoveNext();
