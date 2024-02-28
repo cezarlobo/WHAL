@@ -79,56 +79,70 @@ namespace IntegracoesVETX.Business
             }
         }
 
-        public void ProcessarNovosClientes(List<Cliente> clientes, List<Endereco> enderecos)
-        {
-            try
-            {
-                Log.WriteLogCliente("Processando Novos Clientes.");
-                if (clientes.Count <= 0)
-                {
-                    return;
-                }
-                Company oCompany = CommonConn.InitializeCompany();
-                if (!oCompany.Connected)
-                {
-                    return;
-                }
-                string document = string.Empty;
-                foreach (Cliente cliente in clientes)
-                {
-                    foreach (Endereco endereco in enderecos)
-                    {
-                        if (cliente.document != null || cliente.corporateDocument != null)
-                        {
-                            document = ((!cliente.isCorporate.Equals("true")) ? cliente.document : cliente.corporateDocument);
-                        }
-                        if (document != null)
-                        {
-                            if (cliente.id.Equals(endereco.userId))
-                            {
-                                InserirClientes(oCompany, cliente, endereco, null);
-                            }
-                            document = null;
-                            continue;
-                        }
-                        log.WriteLogTable(oCompany, EnumTipoIntegracao.Cliente, cliente.id, "", EnumStatusIntegracao.Erro, "Cliente não cadastrado pois o número do documento VTEX é inválido.");
-                        break;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Log.WriteLogCliente("ProcessarNovosClientes Exception:" + e.Message);
-                throw;
-            }
-        }
+        //public void ProcessarNovosClientes(List<Cliente> clientes, List<Endereco> enderecos)
+        //{
+        //    try
+        //    {
+        //        Log.WriteLogCliente("Processando Novos Clientes.");
+        //        if (clientes.Count <= 0)
+        //        {
+        //            return;
+        //        }
+        //        Company oCompany = CommonConn.InitializeCompany();
+        //        if (!oCompany.Connected)
+        //        {
+        //            return;
+        //        }
+        //        string document = string.Empty;
+        //        foreach (Cliente cliente in clientes)
+        //        {
+        //            foreach (Endereco endereco in enderecos)
+        //            {
+        //                if (cliente.document != null || cliente.corporateDocument != null)
+        //                {
+        //                    document = ((!cliente.isCorporate.Equals("true")) ? cliente.document : cliente.corporateDocument);
+        //                }
+        //                if (document != null)
+        //                {
+        //                    if (cliente.id.Equals(endereco.userId))
+        //                    {
+        //                        InserirClientes(oCompany, cliente, endereco, null);
+        //                    }
+        //                    document = null;
+        //                    continue;
+        //                }
+        //                log.WriteLogTable(oCompany, EnumTipoIntegracao.Cliente, cliente.id, "", EnumStatusIntegracao.Erro, "Cliente não cadastrado pois o número do documento VTEX é inválido.");
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Log.WriteLogCliente("ProcessarNovosClientes Exception:" + e.Message);
+        //        throw;
+        //    }
+        //}
 
-        private void InserirClientes(Company company, Cliente cliente, Endereco endereco, Pedido pedido)
+        //private void InserirClientes(Company company, Cliente cliente, Endereco endereco, Pedido pedido)
+        //{
+        //    try
+        //    {
+        //        string errorMessage;
+        //        new BusinessPartnersDAL().InserirBusinessPartner(company, cliente, endereco, pedido, out errorMessage);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Log.WriteLogCliente("Exception inserirClientes " + e.Message);
+        //        throw;
+        //    }
+        //}
+
+        private void InserirClientes(Company company, Cliente cliente, Pedido pedido)
         {
             try
             {
                 string errorMessage;
-                new BusinessPartnersDAL().InserirBusinessPartner(company, cliente, endereco, pedido, out errorMessage);
+                new BusinessPartnersDAL().InserirBusinessPartner(company, cliente, pedido, out errorMessage);
             }
             catch (Exception e)
             {
@@ -184,6 +198,8 @@ namespace IntegracoesVETX.Business
             }
         }
 
+        ////CHECA A TABELA INTERMEDIÁRIA SE TEM PEDIDO COM STATUS 0 OU 2 PARA INTEGRAR NO SAP
+        
         public void IniciarIntegracaoPedido(Company oCompany)
         {
             string idPedidoVtex;
@@ -193,6 +209,8 @@ namespace IntegracoesVETX.Business
                 Repositorio repositorioPedido = new Repositorio();
                 //List<Feed> listaEnveto = new List<Feed>();
                 Pedido pedidoVtex = new Pedido();
+
+                Cliente dadosCliente = new Cliente();
 
                 SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)oCompany.GetBusinessObject(BoObjectTypes.BoRecordset);
                 oRS.DoQuery(DAL.SQL.Queries.VTEX_PedidosIntegrar);
@@ -215,51 +233,35 @@ namespace IntegracoesVETX.Business
                         {
                             continue;
                         }
-                        if (pedidoVtex.origin.Equals("Fulfillment"))
+
+                        new List<Cliente>();
+                        List<Endereco> enderecols = new List<Endereco>();
+                        if (!string.IsNullOrEmpty(pedidoVtex.clientProfileData.document))
                         {
-                            Cliente clienteMkt = new Cliente();
-                            Endereco enderecoMkt = new Endereco();
-                            InserirClientes(oCompany, clienteMkt, enderecoMkt, pedidoVtex);
-                        }
-                        else
-                        {
-                            new List<Cliente>();
-                            List<Endereco> enderecols = new List<Endereco>();
-                            if (!string.IsNullOrEmpty(pedidoVtex.clientProfileData.document))
+                            Task<HttpResponseMessage> responseCliente = repositorioPedido.BuscarClientePorDocumento(pedidoVtex.clientProfileData.document);
+                            if (responseCliente.Result.IsSuccessStatusCode)
                             {
-                                Task<HttpResponseMessage> responseCliente = repositorioPedido.BuscarClientePorDocumento(pedidoVtex.clientProfileData.document);
-                                if (responseCliente.Result.IsSuccessStatusCode)
+                                foreach (Cliente cliente in JsonConvert.DeserializeObject<List<Cliente>>(responseCliente.Result.Content.ReadAsStringAsync().Result))
                                 {
-                                    foreach (Cliente cliente in JsonConvert.DeserializeObject<List<Cliente>>(responseCliente.Result.Content.ReadAsStringAsync().Result))
-                                    {
-                                        Task<HttpResponseMessage> responseEndereco = repositorioPedido.BuscarEnderecoPorUserId(cliente.id);
-                                        if (responseEndereco.Result.IsSuccessStatusCode)
-                                        {
-                                            enderecols = JsonConvert.DeserializeObject<List<Endereco>>(responseEndereco.Result.Content.ReadAsStringAsync().Result);
-                                        }
-                                        foreach (Endereco endereco in enderecols)
-                                        {
-                                            if (oCompany.Connected)
-                                            {
-                                                string document = string.Empty;
-                                                if (cliente.document != null || cliente.corporateDocument != null)
-                                                {
-                                                    document = ((!cliente.isCorporate.Equals("true")) ? cliente.document : cliente.corporateDocument);
-                                                }
-                                                if (document != null)
-                                                {
-                                                    InserirClientes(oCompany, cliente, endereco, pedidoVtex);
-                                                }
-                                                else
-                                                {
-                                                    log.WriteLogTable(oCompany, EnumTipoIntegracao.Cliente, cliente.id, "", EnumStatusIntegracao.Erro, "Cliente não cadastrado pois o número do documento VTEX é inválido.");
-                                                }
-                                            }
-                                        }
-                                    }
+                                    //Task<HttpResponseMessage> responseEndereco = repositorioPedido.BuscarEnderecoPorUserId(cliente.id);
+                                    //if (responseEndereco.Result.IsSuccessStatusCode)
+                                    //{
+                                    //    enderecols = JsonConvert.DeserializeObject<List<Endereco>>(responseEndereco.Result.Content.ReadAsStringAsync().Result);
+                                    //}
+                                    //foreach (Endereco endereco in enderecols)
+                                    //{
+                                    //    if (oCompany.Connected)
+                                    //    {
+
+                                            //InserirClientes(oCompany, cliente, endereco, pedidoVtex);
+                                            InserirClientes(oCompany, cliente, pedidoVtex);
+
+                                    //    }
+                                    //}
                                 }
                             }
                         }
+
                         InserirPedidoVenda(oCompany, pedidoVtex, evento);
 
                         oRS.MoveNext();

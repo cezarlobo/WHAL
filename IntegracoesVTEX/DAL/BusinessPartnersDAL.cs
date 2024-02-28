@@ -16,34 +16,21 @@ namespace IntegracoesVETX.DAL
 		internal BusinessPartnersDAL()
 		{
 			log = new Log();
-		}
+		}			
 
-		public void InserirBusinessPartner(Company company, Cliente cliente, Endereco endereco, Pedido pedido, out string messageError)
+		public void InserirBusinessPartner(Company company, Cliente cliente, Pedido pedido,  out string messageError)
 		{
 			string document = string.Empty;
 			bool isCorporate = false;
 			bool marketPlace = false;
-			if (pedido.origin.Equals("Fulfillment"))
-			{
-				marketPlace = true;
-			}
-			if (marketPlace)
-			{
-				document = pedido.clientProfileData.document;
-			}
-			if (cliente.isCorporate != null && cliente.isCorporate.Equals("true"))
-			{
-				document = cliente.corporateDocument;
-				isCorporate = true;
-			}
-			else if (cliente.isCorporate != null && cliente.isCorporate.Equals("false"))
-			{
-				document = cliente.document;
-			}
+
 			try
 			{
 				CountyDAL countyDAL = new CountyDAL();
 				oCompany = company;
+				string cardCodePrefix = ConfigurationManager.AppSettings["CardCodePrefix"];
+				document = pedido.clientProfileData.document;
+				Log.WriteLogCliente("Inserindo Cliente " + cardCodePrefix + document);
 				int _groupCode = Convert.ToInt32(ConfigurationManager.AppSettings["GroupCode"]);
 				int _splCode = Convert.ToInt32(ConfigurationManager.AppSettings["SlpCode"]);
 				Convert.ToInt32(ConfigurationManager.AppSettings["QoP"]);
@@ -52,9 +39,7 @@ namespace IntegracoesVETX.DAL
 				string indicadorOpConsumidor = ConfigurationManager.AppSettings["IndicadorOpConsumidor"];
 				string gerente = ConfigurationManager.AppSettings["Gerente"];
 				int priceList = Convert.ToInt32(ConfigurationManager.AppSettings["PriceList"]);
-				string cardCodePrefix = ConfigurationManager.AppSettings["CardCodePrefix"];
 				Convert.ToInt32(ConfigurationManager.AppSettings["CategoriaCliente"]);
-				Log.WriteLogCliente("Inserindo Cliente " + cardCodePrefix + document);
 				BusinessPartners oBusinessPartner = null;
 				oBusinessPartner = (BusinessPartners)oCompany.GetBusinessObject(BoObjectTypes.oBusinessPartners);
 				BusinessPartners oBusinessPartnerUpdateTest = null;
@@ -64,15 +49,8 @@ namespace IntegracoesVETX.DAL
 					oBusinessPartner = oBusinessPartnerUpdateTest;
 				}
 				oBusinessPartner.CardCode = cardCodePrefix + document;
-				if (marketPlace)
-				{
-					oBusinessPartner.CardName = pedido.clientProfileData.firstName + " " + pedido.clientProfileData.lastName;
-				}
-				else
-				{
-					oBusinessPartner.CardName = cliente.firstName + " " + cliente.lastName;
-					oBusinessPartner.EmailAddress = cliente.email;
-				}
+				oBusinessPartner.CardName = pedido.clientProfileData.firstName + " " + pedido.clientProfileData.lastName;
+				oBusinessPartner.EmailAddress = cliente.email;
 				oBusinessPartner.CardType = BoCardTypes.cCustomer;
 				oBusinessPartner.GroupCode = _groupCode;
 				oBusinessPartner.SalesPersonCode = _splCode;
@@ -82,102 +60,45 @@ namespace IntegracoesVETX.DAL
 				oBusinessPartner.UserFields.Fields.Item("U_TX_IndFinal").Value = indicadorOpConsumidor;
 				oBusinessPartner.UserFields.Fields.Item("U_Gerente").Value = gerente;
 				oBusinessPartner.UserFields.Fields.Item("U_CategoriaCliente").Value = gerente;
-				if (cliente.homePhone != null)
-				{
-					oBusinessPartner.Phone1 = cliente.homePhone.Substring(2);
-				}
-				if (cliente.phone != null)
-				{
-					oBusinessPartner.Cellular = cliente.phone.Substring(2);
-				}
-				if (marketPlace)
-				{
-					oBusinessPartner.Phone1 = pedido.clientProfileData.phone;
-				}
+				oBusinessPartner.Phone1 = pedido.clientProfileData.phone.Substring(3);
 				string codMunicipio = string.Empty;
-				if (!marketPlace)
-				{
-					codMunicipio = countyDAL.RecuperarCodigoMunicipio(endereco.city, oCompany);
-				}
-				else if (pedido.shippingData.address.city != null)
+				if (pedido.shippingData.address.city != null)
 				{
 					codMunicipio = countyDAL.RecuperarCodigoMunicipio(pedido.shippingData.address.city, oCompany);
 				}
 				oBusinessPartner.Addresses.SetCurrentLine(0);
 				oBusinessPartner.Addresses.AddressType = BoAddressType.bo_BillTo;
 				oBusinessPartner.Addresses.AddressName = "COBRANCA";
-				if (marketPlace)
-				{
-					oBusinessPartner.Addresses.City = pedido.shippingData.address.city;
-				}
-				else
-				{
-					oBusinessPartner.Addresses.City = endereco.city;
-				}
-				if (marketPlace && pedido.shippingData.address.complement != null && pedido.shippingData.address.complement.Length <= 100)
+				oBusinessPartner.Addresses.City = pedido.shippingData.address.city;
+
+				if (pedido.shippingData.address.complement != null && pedido.shippingData.address.complement.Length <= 100)
 				{
 					oBusinessPartner.Addresses.BuildingFloorRoom = pedido.shippingData.address.complement;
 				}
-				else if (endereco != null && endereco.complement != null && endereco.complement.Length <= 100)
-				{
-					oBusinessPartner.Addresses.BuildingFloorRoom = endereco.complement;
-				}
-				if (marketPlace)
-				{
-					oBusinessPartner.Addresses.Block = pedido.shippingData.address.neighborhood;
-					oBusinessPartner.Addresses.StreetNo = pedido.shippingData.address.number;
-					oBusinessPartner.Addresses.ZipCode = pedido.shippingData.address.postalCode;
-					oBusinessPartner.Addresses.State = pedido.shippingData.address.state;
-					oBusinessPartner.Addresses.Street = pedido.shippingData.address.street;
-					oBusinessPartner.Addresses.County = codMunicipio;
-				}
-				else
-				{
-					oBusinessPartner.Addresses.Block = endereco.neighborhood;
-					oBusinessPartner.Addresses.StreetNo = endereco.number;
-					oBusinessPartner.Addresses.ZipCode = endereco.postalCode;
-					oBusinessPartner.Addresses.State = endereco.state;
-					oBusinessPartner.Addresses.Street = endereco.street;
-					oBusinessPartner.Addresses.County = codMunicipio;
-				}
+				oBusinessPartner.Addresses.Block = pedido.shippingData.address.neighborhood;
+				oBusinessPartner.Addresses.StreetNo = pedido.shippingData.address.number;
+				oBusinessPartner.Addresses.ZipCode = pedido.shippingData.address.postalCode;
+				oBusinessPartner.Addresses.State = pedido.shippingData.address.state;
+				oBusinessPartner.Addresses.Street = pedido.shippingData.address.street;
+				oBusinessPartner.Addresses.County = codMunicipio;
+
 				oBusinessPartner.Addresses.Add();
 				oBusinessPartner.Addresses.SetCurrentLine(1);
 				oBusinessPartner.Addresses.AddressType = BoAddressType.bo_ShipTo;
 				oBusinessPartner.Addresses.AddressName = "FATURAMENTO";
-				if (marketPlace)
-				{
-					oBusinessPartner.Addresses.City = pedido.shippingData.address.city;
-				}
-				else
-				{
-					oBusinessPartner.Addresses.City = endereco.city;
-				}
-				if (marketPlace && pedido.shippingData.address.complement != null && pedido.shippingData.address.complement.Length <= 100)
+				oBusinessPartner.Addresses.City = pedido.shippingData.address.city;
+
+				if (pedido.shippingData.address.complement != null && pedido.shippingData.address.complement.Length <= 100)
 				{
 					oBusinessPartner.Addresses.BuildingFloorRoom = pedido.shippingData.address.complement;
 				}
-				else if (endereco != null && endereco.complement != null && endereco.complement.Length <= 100)
-				{
-					oBusinessPartner.Addresses.BuildingFloorRoom = endereco.complement;
-				}
-				if (marketPlace)
-				{
-					oBusinessPartner.Addresses.Block = pedido.shippingData.address.neighborhood;
-					oBusinessPartner.Addresses.StreetNo = pedido.shippingData.address.number;
-					oBusinessPartner.Addresses.ZipCode = pedido.shippingData.address.postalCode;
-					oBusinessPartner.Addresses.State = pedido.shippingData.address.state;
-					oBusinessPartner.Addresses.Street = pedido.shippingData.address.street;
-					oBusinessPartner.Addresses.County = codMunicipio;
-				}
-				else
-				{
-					oBusinessPartner.Addresses.Block = endereco.neighborhood;
-					oBusinessPartner.Addresses.StreetNo = endereco.number;
-					oBusinessPartner.Addresses.ZipCode = endereco.postalCode;
-					oBusinessPartner.Addresses.State = endereco.state;
-					oBusinessPartner.Addresses.Street = endereco.street;
-					oBusinessPartner.Addresses.County = codMunicipio;
-				}
+				oBusinessPartner.Addresses.Block = pedido.shippingData.address.neighborhood;
+				oBusinessPartner.Addresses.StreetNo = pedido.shippingData.address.number;
+				oBusinessPartner.Addresses.ZipCode = pedido.shippingData.address.postalCode;
+				oBusinessPartner.Addresses.State = pedido.shippingData.address.state;
+				oBusinessPartner.Addresses.Street = pedido.shippingData.address.street;
+				oBusinessPartner.Addresses.County = codMunicipio;
+
 				oBusinessPartner.Addresses.Add();
 				oBusinessPartner.BilltoDefault = "COBRANCA";
 				oBusinessPartner.ShipToDefault = "FATURAMENTO";
@@ -201,15 +122,9 @@ namespace IntegracoesVETX.DAL
 				}
 				else
 				{
-					if (isCorporate)
-					{
-						oBusinessPartner.FiscalTaxID.TaxId0 = document;
-					}
-					else
-					{
-						oBusinessPartner.FiscalTaxID.TaxId4 = document;
-						oBusinessPartner.FiscalTaxID.TaxId1 = "Isento";
-					}
+					oBusinessPartner.FiscalTaxID.TaxId4 = document;
+					oBusinessPartner.FiscalTaxID.TaxId1 = "Isento";
+
 					if (oBusinessPartner.Add() != 0)
 					{
 						messageError = oCompany.GetLastErrorDescription();
@@ -233,5 +148,6 @@ namespace IntegracoesVETX.DAL
 				throw;
 			}
 		}
+
 	}
 }
