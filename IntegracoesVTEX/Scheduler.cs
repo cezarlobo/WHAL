@@ -131,7 +131,7 @@ namespace IntegracoesVTEX
             {
                 timerPedidosImportar.Enabled = false;
                 timerPedidosImportar.AutoReset = false;
-                log.WriteLogPedido("#### IMPORTAÇÃO DE PEDIDOS INICIALIZADA");
+                log.WriteLogPedido("#### IMPORTAÇÃO DOS PEDIDOS DA VTEX INICIALIZADA");
                 new IntegracaoService().IniciarImportacaoPedidos(oCompany);
                 timerPedidosImportar.Enabled = true;
                 GC.Collect();
@@ -140,7 +140,7 @@ namespace IntegracoesVTEX
             }
             catch (Exception ex)
             {
-                log.WriteLogPedido("Exception ImportacaoPedido " + ex.Message);
+                log.WriteLogPedido("Exception BuscaPedidoVTEX " + ex.Message);
                 throw;
             }
         }
@@ -151,7 +151,7 @@ namespace IntegracoesVTEX
             {
                 timerPedidosIntegrar.Enabled = false;
                 timerPedidosIntegrar.AutoReset = false;
-                log.WriteLogPedido("#### INTEGRAÇÃO DE PEDIDOS INICIALIZADA");
+                log.WriteLogPedido("#### INTEGRAÇÃO DOS PEDIDOS NO SAP INICIALIZADA");
                 new IntegracaoService().IniciarIntegracaoPedido(oCompany);
                 timerPedidosIntegrar.Enabled = true;
                 GC.Collect();
@@ -160,7 +160,7 @@ namespace IntegracoesVTEX
             }
             catch (Exception ex)
             {
-                log.WriteLogPedido("Exception IntegracaoPedido " + ex.Message);
+                log.WriteLogPedido("Exception IntegracaoPedidoSAP " + ex.Message);
                 throw;
             }
         }

@@ -79,13 +79,32 @@ namespace IntegracoesVETX.DAL.SQL {
         ///   Looks up a localized string similar to SELECT T0.DocNum AS docNPV ,T0.NumAtCard AS idOrderVtex , T0.U_NumPedEXT AS idOrderVtex2 
         ///,T2.DocEntry AS externalId ,T2.DocNum AS docSAP ,T2.Serial AS invoiceNumber ,T2.DocDate AS invoiceDate 
         ///,T3.KeyNfe AS nfeKey ,T0.PickRmrk AS shippingMethod ,T2.SeriesStr AS invoiceOrderSeries 
-        ///,T1.ItemCode AS codItem ,T1.Price AS precoItem ,T1.Quantity AS qtdItem ,T0.DocTotal AS totalNF 
+        ///,T1.ItemCode AS codItem ,T1.Price AS precoItem ,T1.Quantity AS qtdItem ,T2.DocTotal AS totalNF 
         ///FROM    ORDR T0 INNER JOIN INV1 T1 ON T0.DocEntry = T1.BaseEntry  
         ///INNER JOIN OINV T2 ON T1.DocEntry = T2.DocEntry and T0.BPLId  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SAP_DadosNF {
             get {
                 return ResourceManager.GetString("SAP_DadosNF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select top 1 Code, U_numVTEX From [@LOG_INTEGRACAO_VTEX] where U_numVTEX = &apos;{0}&apos; order by code desc.
+        /// </summary>
+        internal static string TblUser_BuscaIdLog {
+            get {
+                return ResourceManager.GetString("TblUser_BuscaIdLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE [@LOG_INTEGRACAO_VTEX] SET U_data = &apos;{0}&apos;, U_status = &apos;{1}&apos;, U_mensagem = &apos;{2}&apos;
+        ///WHERE U_tipoDocumento = &apos;{3}&apos; AND U_numVTEX = &apos;{4}&apos; .
+        /// </summary>
+        internal static string TblUser_UpdateLog {
+            get {
+                return ResourceManager.GetString("TblUser_UpdateLog", resourceCulture);
             }
         }
         

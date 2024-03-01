@@ -156,7 +156,7 @@ namespace IntegracoesVETX.Business
             string idPedidoVtex;
             try
             {
-                log.WriteLogPedido("Inicio do Processo de Importação de Pedido.");
+                log.WriteLogPedido("Inicio do Processo de Importação de Pedido da VTEX.");
                 Repositorio repositorioPedido = new Repositorio();
                 List<Feed> listaEnveto = new List<Feed>();
                 Pedido pedidoVtex = new Pedido();
@@ -182,6 +182,10 @@ namespace IntegracoesVETX.Business
 
                         oRS = null;
                     }
+                    else 
+                    {
+                        log.WriteLogPedido("Sem pedido para buscar na VTEX com status ready-for-handling no momento.");
+                    }
                 }
                 else
                 {
@@ -193,7 +197,7 @@ namespace IntegracoesVETX.Business
             }
             catch (Exception e)
             {
-                log.WriteLogPedido("Exception método IniciarIntegracaoPedido - " + e.Message);
+                log.WriteLogPedido("Exception método IniciarImportacaoPedidos - " + e.Message);
                 throw;
             }
         }
@@ -205,7 +209,7 @@ namespace IntegracoesVETX.Business
             string idPedidoVtex;
             try
             {
-                log.WriteLogPedido("Inicio do Processo de Integração de Pedido.");
+                log.WriteLogPedido("Inicio do Processo de Integração de Pedido para o SAP.");
                 Repositorio repositorioPedido = new Repositorio();
                 //List<Feed> listaEnveto = new List<Feed>();
                 Pedido pedidoVtex = new Pedido();
@@ -271,7 +275,7 @@ namespace IntegracoesVETX.Business
                 }
                 else
                 {
-                    log.WriteLogPedido("Nenhum pedido importado para integrar ");
+                    log.WriteLogPedido("Nenhum pedido para integrar no SAP");
                 }
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -326,7 +330,7 @@ namespace IntegracoesVETX.Business
             }
             catch (Exception e)
             {
-                log.WriteLogPedido("Exception InserirPedidoVenda " + e.Message);
+                log.WriteLogPedido("Exception ao InserirPedidoVendaSAP " + e.Message);
                 throw;
             }
         }

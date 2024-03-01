@@ -124,6 +124,12 @@
   <data name="SAP_DadosNF" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>sap_dadosnf.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="TblUser_BuscaIdLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>tbluser_buscaidlog.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="TblUser_UpdateLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>tbluser_updatelog.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="VTEX_InserirPedido" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>vtex_inserirpedido.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

@@ -1,0 +1,1 @@
+﻿Select top 1 Code, U_numVTEX From [@LOG_INTEGRACAO_VTEX] where U_numVTEX = '{0}' order by code desc

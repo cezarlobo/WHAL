@@ -127,6 +127,10 @@ namespace IntegracoesVETX.Util
 			{
 				if (company.Connected)
 				{
+					SAPbobsCOM.Recordset oRS = (SAPbobsCOM.Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
+					string sql = string.Format(DAL.SQL.Queries.TblUser_BuscaIdLog, numVtex);
+					oRS.DoQuery(sql);
+
 					UserTable userTable = company.UserTables.Item("LOG_INTEGRACAO_VTEX");
 					userTable.UserFields.Fields.Item("U_data").Value = DateTime.Now.ToString();
 					userTable.UserFields.Fields.Item("U_tipoDocumento").Value = tipoDocumento;
@@ -134,8 +138,19 @@ namespace IntegracoesVETX.Util
 					userTable.UserFields.Fields.Item("U_numSAP").Value = numSAP;
 					userTable.UserFields.Fields.Item("U_status").Value = status;
 					userTable.UserFields.Fields.Item("U_mensagem").Value = mensagem;
-					userTable.Add();
+					if (oRS.RecordCount > 0)
+					{
+						string sqlUpdate = string.Format(DAL.SQL.Queries.TblUser_UpdateLog, DateTime.Now.ToString(), status,mensagem,tipoDocumento, numVtex);
+						oRS.DoQuery(sqlUpdate);
+					}
+					else
+					{
+						userTable.Add();
+					}
 					Marshal.ReleaseComObject(userTable);
+
+					oRS = null;
+
 				}
 			}
 			catch (Exception)
