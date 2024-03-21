@@ -54,7 +54,7 @@ namespace IntegracoesVETX.DAL
 				oBusinessPartner.CardType = BoCardTypes.cCustomer;
 				oBusinessPartner.GroupCode = _groupCode;
 				oBusinessPartner.SalesPersonCode = _splCode;
-				oBusinessPartner.PayTermsGrpCode = groupNum;
+				//oBusinessPartner.PayTermsGrpCode = groupNum;
 				oBusinessPartner.PriceListNum = priceList;
 				oBusinessPartner.UserFields.Fields.Item("U_TX_IndIEDest").Value = indicadorIE;
 				oBusinessPartner.UserFields.Fields.Item("U_TX_IndFinal").Value = indicadorOpConsumidor;
@@ -122,6 +122,7 @@ namespace IntegracoesVETX.DAL
 				}
 				else
 				{
+					oBusinessPartner.PayTermsGrpCode = groupNum;
 					oBusinessPartner.FiscalTaxID.TaxId4 = document;
 					oBusinessPartner.FiscalTaxID.TaxId1 = "Isento";
 
